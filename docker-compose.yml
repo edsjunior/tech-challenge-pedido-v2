@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pedido_db
+    ports:
+      - "5433:5433"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  pedido-service:
+    build: .
+    ports:
+      - "8081:8080"
+    depends_on:
+      - cliente-service
+      - produto-service
+      - pagamento-service
+  
+  cliente-service:
+    image: cliente-service:latest
+    ports:
+      - "8080:8080"
+
+  produto-service:
+    image: produto-service:latest
+    ports:
+      - "8080:8080"
+
+  pagamento-service:
+    image: pagamento-service:latest
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
