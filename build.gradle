@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+    id 'jacoco'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 }
@@ -8,9 +9,7 @@ group = 'br.com.fiap'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    sourceCompatibility = '17'
 }
 
 repositories {
@@ -36,6 +35,23 @@ dependencies {
 
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+    }
 }
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+test {
+    finalizedBy jacocoTestReport // Generate Jacoco report after tests
+}
+
+// tasks.named('test') {
+//     useJUnitPlatform()
+// }
+
